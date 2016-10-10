@@ -1,0 +1,36 @@
+
+% List of constraints
+% Order -> (Color  Race  Candy  Pet  Drink)
+((solve H)
+	(member (Red English _ _ _) H)
+	(member (_ Spaniard _ Dog _) H)
+	(eq H ((_ Norwegian _ _ _) _ _ _ _))
+	(left (Ivory _ _ _ _) (Green _ _ _ _) H)
+	(next (_ _ Hersheys _ _) (_ _ _ Fox _) H)
+	(member (Yellow _ KitKats _ _) H)
+	(next (_ Norwegian _ _ _) (Blue _ _ _ _) H)
+	(member (_ _ Smarties Snails _) H)
+	(member (_ _ Snickers _ OrangeJuice) H)
+	(member (_ Ukranian _ _ Tea) H)
+	(member (_ Japanese MilkyWays _ _) H)
+	(next (_ _ KitKats _ _) (_ _ _ Horse _) H)
+	(member (Green _ _ _ Coffee) H)
+	(eq H (_ _ (_ _ _ _ Milk) _ _))
+)
+
+
+% Helper constraint predicates
+% Hard coded pattern matching for efficiency
+((left A B (A B _ _ _)))
+((left A B (_ A B _ _)))
+((left A B (_ _ A B _)))
+((left A B (_ _ _ A B)))
+
+((next A B L)(left A B L))
+((next A B L)(left B A L))
+
+((member X (X _ _ _ _) ))
+((member X (_ X _ _ _) ))
+((member X (_ _ X _ _) ))
+((member X (_ _ _ X _) ))
+((member X (_ _ _ _ X) ))
