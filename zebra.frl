@@ -1,5 +1,27 @@
+/* Alex Kersey
+ * Daniel Moon 
+ * Garrett Scholtes
+ * 
+ * 2016-10-10
+ * 
+ * AI Assignment #3
+ *
+ * "The zebra puzzle"
+ * 
+ *  
+ * Scroll down to the bottom for a sample run of the program
+ * 
+ */
 
-% List of constraints
+
+% ------------------------------------------------------------ %
+
+
+% Constraints definition
+%
+% The solution will be a list, H, of houses
+%
+
 % Order -> (Color  Race  Candy  Pet  Drink)
 ((solve H)
 	(member (Red English _ _ _) H)
@@ -15,8 +37,7 @@
 	(member (_ Japanese MilkyWays _ _) H)
 	(next (_ _ KitKats _ _) (_ _ _ Horse _) H)
 	(member (Green _ _ _ Coffee) H)
-	(eq H (_ _ (_ _ _ _ Milk) _ _))
-)
+	(eq H (_ _ (_ _ _ _ Milk) _ _)))
 
 
 % Helper constraint predicates
@@ -34,3 +55,125 @@
 ((member X (_ _ X _ _) ))
 ((member X (_ _ _ X _) ))
 ((member X (_ _ _ _ X) ))
+
+
+% ------------------------------------------------------------ %
+
+
+% Query helpers (designed to handle failed cases -- i.e., will state if constraint is not meetable)
+% 
+% Note: These queries do not distinguish between 'x MUST be y' and 'x COULD be y', though it would 
+% be possible to determine such information if desired
+% 
+% (This is explicitly visible in the 'who-drinks-what' query, where we can see there is
+% no unique solution to what the norwegian drinks)
+
+((solutions H)(solve H))
+
+((color-of-norwegian)
+	(solutions H)
+	(member (C Norwegian _ _ _) H)
+	(p "The Norwegian's house is ")
+	(pp C)
+	(fail))
+((color-of-norwegian)
+	(solutions H)
+	(negg member (C Norwegian _ _ _) H)
+	(pp "There is no house with a Norwegian")
+	(fail))
+
+((color-of-zebra)
+	(solutions H)
+	(member (C _ _ Zebra _) H)
+	(p "The " C " house may have a Zebra")(pp)
+	(fail))
+((color-of-zebra)
+	(solutions H)
+	(negg member (C _ _ Zebra _) H)
+	(pp "No house can have a Zebra")
+	(fail))
+
+((wine-house)
+	(solutions H)
+	(member (C R _ _ Wine) H)
+	(p "The " R " in the " C " house may drink wine")(pp)
+	(fail))
+((wine-house)
+	(solutions H)
+	(negg member (C _ _ _ Wine) H)
+	(pp "No one drinks wine")
+	(fail))
+
+((smarties-oj-house)
+	(solutions H)
+	(member (C R Smarties _ OrangeJuice) H)
+	(p "The " R " in the " C " house may eat smarties and drink orange juice")(pp)
+	(fail))
+((smarties-oj-house)
+	(solutions H)
+	(negg member (C R Smarties _ OrangeJuice) H)
+	(pp "No one eats smarties AND drinks orange juice")
+	(fail))
+
+((last-house-color)
+	(solutions (_ _ _ _ (COLOR _ _ _ _)))
+	(p "The last house is " COLOR)(pp))
+
+((who-drinks-what)
+	(solutions H)
+	(list-drinks-what H))
+((list-drinks-what ((_ R _ _ D)))
+	(p "The " R " drinks " D)
+	(pp))
+((list-drinks-what (H|T))
+	(list-drinks-what (H))
+	(list-drinks-what T))
+
+
+% ------------------------------------------------------------ %
+
+
+?((pp "---------- Example queries to the Zebra Puzzle ----------"))
+?((pp)(color-of-norwegian))
+?((pp)(color-of-zebra))
+?((pp)(wine-house))
+?((pp)(smarties-oj-house))
+?((pp)(last-house-color))
+?((pp)(who-drinks-what))
+
+
+% ------------------------------------------------------------ %
+
+
+/*
+ *
+ * Sample output from this program:
+ * 
+ * 
+ *		Fril >reload zebra
+ *		---------- Example queries to the Zebra Puzzle ----------
+ *
+ *		The Norwegian's house is Yellow
+ *
+ *		The  Green  house may have a Zebra
+ *
+ *		The  Norwegian  in the  Yellow  house may drink wine
+ *
+ *		No one eats smarties AND drinks orange juice
+ *
+ *		The last house is  Green
+ *
+ *		The  Norwegian  drinks  _4d
+ *		The  Ukranian  drinks  Tea
+ *		The  English  drinks  Milk
+ *		The  Spaniard  drinks  OrangeJuice
+ *		The  Japanese  drinks  Coffee
+ *	
+ *		yes
+ *		Fril >
+ *
+ *
+ * Notice how we can infer from "The  Norwegian  drinks  _4d" that  
+ * there are multiple possible solutions for what the Norwegian drinks
+ *
+ */
