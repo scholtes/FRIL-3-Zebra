@@ -68,7 +68,8 @@
 % (This is explicitly visible in the 'who-drinks-what' query, where we can see there is
 % no unique solution to what the norwegian drinks)
 
-((solutions H)(solve H))
+% For the sake of query speed, pre-solve the puzzle
+?((solve H)(addcl ((solutions H))))
 
 ((color-of-norwegian)
 	(solutions H)
